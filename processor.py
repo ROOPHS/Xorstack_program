@@ -9,12 +9,12 @@ class OrderProcessor:
         if discount is None or not isinstance(discount, (int, float)):
             return amount
 
-        return amount - discount
+        return amount - (amount * discount / 100)
 
     def classify_order(self, amount):
-        if amount > 1000:
+        if amount >= 1000:
             return "Large"
-        elif amount > 500
+        elif amount >= 500:
             return "Medium"
         elif amount >= 100:
             return "Small"
@@ -25,35 +25,34 @@ class OrderProcessor:
         results = []
 
         for order in self.orders:
-            discount = order.get("discount_pct")
+            discount = order.get("discount")
             amount = order.get("amount", 0)
             final_amount = self.apply_discount(amount, discount)
 
-            classification = self.classify_orders(final_amount)
+            classification = self.classify_order(final_amount)
 
-            results.append({
-                "customer": order["customer"],
-                "region": order["region"],
-                "final_amount": final_amount,
-                "classification": classification,
-                "order_date": order["order_date"]
-            })
+            results.append(
+                {
+                    "customer": order["customer"],
+                    "region": order["region"],
+                    "final_amount": final_amount,
+                    "classification": classification,
+                    "order_date": order["order_date"],
+                }
+            )
 
         return results
 
     def summary(self, results):
-        valid = [item for item in results if item["final_amount"] is None]
+        valid = [item for item in results if item["final_amount"] is not None]
+        if not valid:
+            return {"total_revenue": None, "latest_customer": None}
 
-        total_revenue = sum(
-            item["final_amount"] for item in valid
-        ) / len(valid)
+        total_revenue = sum(item["final_amount"] for item in valid)
 
-        latest = max(results, key=lambda item: item["date"])
+        latest = max(valid, key=lambda item: item["order_date"])
 
-        return {
-            "total_revenue": total_revenue,
-            "latest_customer": latest["customer"]
-        }
+        return {"total_revenue": total_revenue, "latest_customer": latest["customer"]}
 
     def print_report(self, results):
         rows = []
@@ -64,19 +63,18 @@ class OrderProcessor:
             else:
                 amount = f"{order['final_amount']:.2f}"
 
-            rows.append([
-                order["customer"],
-                order["region"],
-                amount,
-                order["classification"]
-            ])
+            rows.append(
+                [order["customer"], order["region"], amount, order["classification"]]
+            )
 
         print("\nSales Order Report")
-        print(tabulate(
-            rows,
-            headers=["Customer", "Region", "Final Amount", "Classification"],
-            tablefmt="github"
-        ))
+        print(
+            tabulate(
+                rows,
+                headers=["Customer", "Region", "Final Amount", "Classification"],
+                tablefmt="github",
+            )
+        )
         print(f"\nTotal orders: {len(results)}")
 
     def print_summary(self, summary):
@@ -86,6 +84,8 @@ class OrderProcessor:
         if summary["total_revenue"] is None:
             print("Total revenue: N/A")
         else:
-            print(f"Total revenue: ${summary['total_revenue']:,.2f}")
-
-        print(f"Most recent order: {summary['latest_customer']}")
+            print(f"Total revenue: ${summary['total_revenue']:.2f}")
+            if summary["latest_customer"] is None:
+                print("Most recent order:N/A")
+            else:
+                print(f"Most recent order: {summary['latest_customer']}")

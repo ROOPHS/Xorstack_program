@@ -6,8 +6,8 @@ def main():
     orders = load_orders("data.json")
     processor = OrderProcessor(orders)
 
-    summary = processor.summary(results)
     results = processor.process()
+    summary = processor.summary(results)
 
     processor.print_report(results)
     processor.print_summary(summary)

@@ -1,3 +1,13 @@
+modules = ["python-3.11"]
 [nix]
 channel = "stable-25_05"
 packages = ["unzip"]
+
+[deployment]
+deploymentTarget = "cloudrun"
+
+[deployment.run]
+args = ["sh", "-c", "/nix/store/s4ckxp77ljlikarkka88ba7qr5mlka97-python3-wrapper/bin/python3 $file"]
+
+[deployment.run.env]
+file = "main.py"
