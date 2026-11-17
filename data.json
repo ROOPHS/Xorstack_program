@@ -1,0 +1,9 @@
+[
+  {"customer": "Acme Corp", "region": "North", "amount": 1250.00, "discount": 20, "order_date": "2024-06-15"},
+  {"customer": "Beta LLC", "region": "South", "amount": 850.00, "discount": 0, "order_date": "Mar 22, 2025"},
+  {"customer": "Gamma Inc", "region": "East", "amount": 300.00, "discount": 15, "order_date": "2023/11/08"},
+  {"customer": "Delta Co", "region": "West", "amount": 75.50, "discount": null, "order_date": "08 Jan 2024"},
+  {"customer": "Epsilon Ltd", "region": "North", "amount": 2500.00, "discount": 20, "order_date": "15 April 2025"},
+  {"customer": "Zeta Group", "region": "South", "amount": 500.00, "discount": "N/A", "order_date": "2025-02-28"},
+  {"customer": "Eta Systems", "region": "East", "amount": 150.00, "discount": 5, "order_date": "September 10, 2024"}
+]
